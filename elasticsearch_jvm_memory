@@ -52,7 +52,7 @@ sub get_json_from_url {
     return $data;
 }
 
-my $data = get_json_from_url("http://$host:9200/_nodes");
+my $data = get_json_from_url("http://$host:9200/_nodes/stats");
 my %out;
 
 foreach my $full_node_name (keys %{$data->{nodes}}) {
