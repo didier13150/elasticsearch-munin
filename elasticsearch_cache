@@ -8,12 +8,13 @@
 # Magic markers:              
 #%# family=auto               
 #%# capabilities=autoconf     
-                              
+
 use strict;                   
 use warnings;                 
 use LWP;                      
 use JSON qw/decode_json/;     
-                              
+use Sys::Hostname;
+
 =head1 NAME                   
                               
 elasticsearch_jvm - A munin plugin that collects stats from the JVM of your elasticsearch instances
@@ -37,6 +38,7 @@ Tomas Doran (t0m) - c<< <bobtfish@bobtfish.net> >>
 =cut
 
 my $host = 'localhost';
+my $hostname = hostname;
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(10);
@@ -56,10 +58,12 @@ my %out;
 
 foreach my $full_node_name (keys %{$data->{nodes}}) {
     next unless $t_data->{nodes}{$full_node_name};
-    $out{field_size} = $t_data->{nodes}{$full_node_name}{indices}{fielddata}{memory_size_in_bytes};
-    $out{filter_size} = $t_data->{nodes}{$full_node_name}{indices}{filter_cache}{memory_size_in_bytes};
-
+    if ($hostname eq $data->{nodes}{$full_node_name}{host}){
+        $out{field_size} = $t_data->{nodes}{$full_node_name}{indices}{fielddata}{memory_size_in_bytes};
+        $out{filter_size} = $t_data->{nodes}{$full_node_name}{indices}{filter_cache}{memory_size_in_bytes};
+    }
 }
+
 if ($ARGV[0] and $ARGV[0] eq 'config') {
     print "graph_args --base 1024\n";
     print "graph_title ElasticSearch cache\n";
@@ -70,8 +74,12 @@ if ($ARGV[0] and $ARGV[0] eq 'config') {
         print "$name.label $name\n"."$name.type GAUGE\n";
     }
 }
-elsif (!$ARGV[0] || $ARGV[0] eq 'autoconf') {
+elsif ($ARGV[0] and $ARGV[0] eq 'autoconf') {
     print "yes\n";
+} else {
+    foreach my $name (keys %out) {
+        print "$name.value " . $out{$name} . "\n";
+    }
 }
 
 exit(0);

@@ -13,6 +13,7 @@ use strict;
 use warnings;                 
 use LWP;                      
 use JSON qw/decode_json/;     
+use Sys::Hostname;
                               
 =head1 NAME                   
                               
@@ -37,6 +38,7 @@ Tomas Doran (t0m) - c<< <bobtfish@bobtfish.net> >>
 =cut
 
 my $host = 'localhost';
+my $hostname = hostname;
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(10);
@@ -50,13 +52,15 @@ sub get_json_from_url {
     return $data;
 }
 
-my $data = get_json_from_url("http://$host:9200/_cluster/nodes?jvm=true");
+my $data = get_json_from_url("http://$host:9200/_nodes");
 my %out;
 
 foreach my $full_node_name (keys %{$data->{nodes}}) {
-    foreach my $name (grep { /_in_bytes$/ } keys %{ $data->{nodes}{$full_node_name}{jvm}{mem} }) {
-        my ($dname) = $name =~ m/(.+)_in_bytes$/;
-        $out{$dname} = $data->{nodes}{$full_node_name}{jvm}{mem}{$name};
+    if ($hostname eq $data->{nodes}{$full_node_name}{host}){
+        foreach my $name (grep { /_in_bytes$/ } keys %{ $data->{nodes}{$full_node_name}{jvm}{mem} }) {
+            my ($dname) = $name =~ m/(.+)_in_bytes$/;
+            $out{$dname} = $data->{nodes}{$full_node_name}{jvm}{mem}{$name};
+        }
     }
 }
 if ($ARGV[0] and $ARGV[0] eq 'config') {
@@ -68,8 +72,9 @@ if ($ARGV[0] and $ARGV[0] eq 'config') {
     foreach my $name (keys %out) {
         print "$name.label $name\n"."$name.type GAUGE\n";
     }
-}
-elsif (!$ARGV[0] || $ARGV[0] eq 'autoconf') {
+} elsif ($ARGV[0] and $ARGV[0] eq 'autoconf') {
+    print "yes\n";
+} else {
     foreach my $name (keys %out) {
         print "$name.value " . $out{$name} . "\n";
     }
