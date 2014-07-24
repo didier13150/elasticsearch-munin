@@ -64,9 +64,8 @@ if ($ARGV[0] and $ARGV[0] eq 'config') {
     print "yes\n";
 } else {
     foreach my $name (grep { /_shards$/ } keys %$data) {
-        print "$name.value " . $data{$name} . "\n";
+        print "$name.value " . $data->{$name} . "\n";
     }
-}
 
 
 exit(0);

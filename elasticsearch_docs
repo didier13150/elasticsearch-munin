@@ -52,8 +52,8 @@ sub get_json_from_url {
     return $data;
 }
 
-my $data = get_json_from_url("http://$host:9200/_/nodes");
-my $t_data = get_json_from_url("http://$host:9200/_/nodes/stats");
+my $data = get_json_from_url("http://$host:9200/_nodes");
+my $t_data = get_json_from_url("http://$host:9200/_nodes/stats");
 my %out;
 
 foreach my $full_node_name (keys %{$data->{nodes}}) {
@@ -71,7 +71,7 @@ if ($ARGV[0] and $ARGV[0] eq 'config') {
         print "$name.label $name\n"."$name.type GAUGE\n";
     }
 }
-elsif ($ARGV[1] || $ARGV[0] eq 'autoconf') {
+elsif ($ARGV[0] and $ARGV[0] eq 'autoconf') {
     print "yes\n";
 } else {
     foreach my $name (keys %out) {
