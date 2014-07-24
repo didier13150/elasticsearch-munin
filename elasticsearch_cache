@@ -71,9 +71,7 @@ if ($ARGV[0] and $ARGV[0] eq 'config') {
     }
 }
 elsif (!$ARGV[0] || $ARGV[0] eq 'autoconf') {
-    foreach my $name (keys %out) {
-        print "$name.value " . $out{$name} . "\n";
-    }
+    print "yes\n";
 }
 
 exit(0);
