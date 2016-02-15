@@ -54,9 +54,10 @@ sub get_json_from_url {
 my $data = get_json_from_url("http://$host:$port/_cluster/health");
 
 if ($ARGV[0] and $ARGV[0] eq 'config') {
+    print "graph_args --base 1000\n";
     print "graph_title ElasticSearch cluster shards\n";
     print "graph_category elasticsearch\n";
-    print "graph_scale no\n";
+    print "graph_vlabel Number of shards\n";
 
     foreach my $name (grep { /_shards$/ } keys %$data) {
         print "$name.label $name\n"."$name.type GAUGE\n";

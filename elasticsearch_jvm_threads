@@ -70,9 +70,10 @@ foreach my $full_node_name (keys %{$data->{nodes}}) {
     }
 }
 if ($ARGV[0] and $ARGV[0] eq 'config') {
+    print "graph_args --base 1000\n";
     print "graph_title ElasticSearch JVM threads\n";
     print "graph_category elasticsearch\n";
-    print "graph_scale no\n";
+    print "graph_vlabel Number of threads\n";
 
     foreach my $name (keys %out) {
         print "$name.label $name\n"."$name.type GAUGE\n";
