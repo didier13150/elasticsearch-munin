@@ -19,7 +19,7 @@ if [ "$1" = "config" ]; then
         exit 0
 fi
 
-NUMBER=`find /var/lib/elasticsearch/*/nodes/0/indices/*/*/translog/* | wc -l`
+NUMBER=`ls /var/lib/elasticsearch/*/nodes/0/indices/*/*/translog/* | wc -l`
 SIZE=`du -s /var/lib/elasticsearch/*/nodes/0/indices/*/*/translog/* | awk '{sum+=$1};END{print sum}'`
 echo "number.value $NUMBER"
 echo "size.value $SIZE"
