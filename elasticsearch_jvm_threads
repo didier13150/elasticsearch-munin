@@ -74,7 +74,7 @@ if ($ARGV[0] and $ARGV[0] eq 'config') {
     foreach my $name (keys %out) {
         print "$name.label $name\n"."$name.type GAUGE\n";
     }
-} elsif ($ARGV[0] || $ARGV[0] eq 'autoconf') {
+} elsif ($ARGV[0] and $ARGV[0] eq 'autoconf') {
     print "yes\n";
 } else {
     foreach my $name (keys %out) {
