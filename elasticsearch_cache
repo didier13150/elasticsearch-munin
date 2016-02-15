@@ -64,7 +64,8 @@ foreach my $full_node_name (keys %{$data->{nodes}}) {
     if (($hostname eq $data->{nodes}{$full_node_name}{host}) or
     ($shortname eq $t_data->{nodes}{$full_node_name}{name})) {
         $out{field_size} = $t_data->{nodes}{$full_node_name}{indices}{fielddata}{memory_size_in_bytes};
-        $out{filter_size} = $t_data->{nodes}{$full_node_name}{indices}{filter_cache}{memory_size_in_bytes};
+        $out{request_size} = $t_data->{nodes}{$full_node_name}{indices}{request_cache}{memory_size_in_bytes};
+        $out{query_size} = $t_data->{nodes}{$full_node_name}{indices}{query_cache}{memory_size_in_bytes};
     }
 }
 
