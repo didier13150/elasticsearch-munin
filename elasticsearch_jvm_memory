@@ -37,7 +37,8 @@ Tomas Doran (t0m) - c<< <bobtfish@bobtfish.net> >>
 
 =cut
 
-my $host = 'localhost';
+my $host = $ENV{'host'} || 'localhost';
+my $port = $ENV{'port'} || '9200';
 my $hostname = hostname;
 
 my $ua = LWP::UserAgent->new;
@@ -52,7 +53,7 @@ sub get_json_from_url {
     return $data;
 }
 
-my $data = get_json_from_url("http://$host:9200/_nodes/stats");
+my $data = get_json_from_url("http://$host:$port/_nodes/stats");
 my %out;
 
 foreach my $full_node_name (keys %{$data->{nodes}}) {
