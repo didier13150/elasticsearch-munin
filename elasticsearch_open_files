@@ -21,6 +21,6 @@ fi
 # while true; do su -c 'ls /proc/$(pidof whatever)/fd' elasticsearch |wc -l |nc  -l -q0 localhost 9998; done 
 
 PID=`ps -u elasticsearch -opid,comm | grep java | awk '{ print $1 }'`
-VALUE=`ls /proc/$PID/fd/ | wc | awk '{ print $1 }'`
+VALUE=`sudo ls /proc/$PID/fd/ | wc | awk '{ print $1 }'`
 echo "used.value $VALUE"
 echo "max.value 65000"
