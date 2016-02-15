@@ -41,6 +41,8 @@ Didier Fabert - c<<didier.fabert@gmail.com>>
 my $host = $ENV{'host'} || 'localhost';
 my $port = $ENV{'port'} || '9200';
 my $hostname = hostname;
+my $shortname = $hostname;
+$shortname =~ s/\..*//;
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(10);
@@ -58,7 +60,8 @@ my $data = get_json_from_url("http://$host:$port/_nodes/stats");
 my %out;
 
 foreach my $full_node_name (keys %{$data->{nodes}}) {
-    if ($hostname eq $data->{nodes}{$full_node_name}{host}){
+    if (($hostname eq $data->{nodes}{$full_node_name}{host}) or
+    ($shortname eq $data->{nodes}{$full_node_name}{name})) {
         foreach my $name (grep { /_in_bytes$/ } keys %{ $data->{nodes}{$full_node_name}{jvm}{mem} }) {
             my ($dname) = $name =~ m/(.+)_in_bytes$/;
             $out{$dname} = $data->{nodes}{$full_node_name}{jvm}{mem}{$name};

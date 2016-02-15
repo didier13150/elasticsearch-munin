@@ -40,6 +40,8 @@ Didier Fabert - c<<didier.fabert@gmail.com>>
 my $host = $ENV{'host'} || 'localhost';
 my $port = $ENV{'port'} || '9200';
 my $hostname = hostname;
+my $shortname = $hostname;
+$shortname =~ s/\..*//;
 
 my $ua = LWP::UserAgent->new;
 $ua->timeout(10);
@@ -59,7 +61,8 @@ my %out;
 
 foreach my $full_node_name (keys %{$data->{nodes}}) {
     next unless $t_data->{nodes}{$full_node_name};
-    if ($hostname eq $data->{nodes}{$full_node_name}{host}){
+    if (($hostname eq $data->{nodes}{$full_node_name}{host}) or
+    ($shortname eq $t_data->{nodes}{$full_node_name}{name})) {
         $out{field_size} = $t_data->{nodes}{$full_node_name}{indices}{fielddata}{memory_size_in_bytes};
         $out{filter_size} = $t_data->{nodes}{$full_node_name}{indices}{filter_cache}{memory_size_in_bytes};
     }
