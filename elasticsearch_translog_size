@@ -2,6 +2,7 @@
 # -*- sh -*-
 
 # AUTHOR: Moritz Onken <onken@netcubed.de>
+# Minor change by Didier Fabert <didier.fabert@gmail.com>: replace find by ls
 
 . $MUNIN_LIBDIR/plugins/plugin.sh
 
